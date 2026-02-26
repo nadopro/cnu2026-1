@@ -10,3 +10,4 @@
 ?>
 Something is wrong with the XAMPP installation :-(
 Test 01
+Test 02 : change folder name
