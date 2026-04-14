@@ -78,3 +78,16 @@ https://www.security.org/how-secure-is-my-password/
 
 
 localhost/phpmyadmin
+
+
+create table first (
+    id  char(30) unique,
+    name    char(30),
+    age     integer
+
+);
+
+insert into first (id, name, age) values ('hong', '홍길동', '12');
+insert into first (id, name, age) values ('lee', '이순신', '52');
+insert into first (id, name, age) values ('hong1', '홍대감', '22');
+insert into first (id, name, age) values ('jing', '정약용', '34');
