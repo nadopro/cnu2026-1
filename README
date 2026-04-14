@@ -157,3 +157,12 @@ insert into users (id, pass, name, level) values
     ('trade', '1111', '무역', '1');
 insert into users (id, pass, name, level) values 
     ('admin', '1111', '관리짱', '9');
+
+
+db: cnu
+dbuser : cnu
+pass : 1111 인 데이터베이스가 있는데,
+
+mysqli()를 이용해 접속하는 코드를 하나 만들고 싶어
+$conn = connectDB();
+와 같이 동작하도록 connectDB() 함수를 db.php파일에 만들어 줘.
