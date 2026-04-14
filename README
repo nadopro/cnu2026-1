@@ -91,3 +91,51 @@ insert into first (id, name, age) values ('hong', '홍길동', '12');
 insert into first (id, name, age) values ('lee', '이순신', '52');
 insert into first (id, name, age) values ('hong1', '홍대감', '22');
 insert into first (id, name, age) values ('jing', '정약용', '34');
+
+
+create table first (
+    id  char(30) unique,
+    name    char(30),
+    age     integer
+);
+이렇게 만들어진 테이블이 있어.
+
+
+
+데이터를 30개 넣고 싶어.
+역사 인물 30명을 무작위로 선택해 이름을 정하고,
+아이디는 "홍길동"인 경우 kdhong처럼 만들어줘.
+나이는 20-60사이의 무작위를 채우는 질의(SQL)을 만들어줘
+
+
+INSERT INTO first (id, name, age) VALUES
+('kjyiy', '김유신', FLOOR(RAND()*41)+20),
+('yslee', '이순신', FLOOR(RAND()*41)+20),
+('jhpark', '박지원', FLOOR(RAND()*41)+20),
+('sgkim', '김구', FLOOR(RAND()*41)+20),
+('ygahn', '안중근', FLOOR(RAND()*41)+20),
+('jwjung', '정약용', FLOOR(RAND()*41)+20),
+('hysong', '송시열', FLOOR(RAND()*41)+20),
+('tggang', '강감찬', FLOOR(RAND()*41)+20),
+('eshin', '신사임당', FLOOR(RAND()*41)+20),
+('jjlee', '이이', FLOOR(RAND()*41)+20),
+('gkchoi', '최영', FLOOR(RAND()*41)+20),
+('hjjang', '장보고', FLOOR(RAND()*41)+20),
+('dsmoon', '문익점', FLOOR(RAND()*41)+20),
+('yskim', '김홍도', FLOOR(RAND()*41)+20),
+('hwshin', '신채호', FLOOR(RAND()*41)+20),
+('sklee', '이황', FLOOR(RAND()*41)+20),
+('jghong', '홍길동', FLOOR(RAND()*41)+20),
+('yskwon', '권율', FLOOR(RAND()*41)+20),
+('hdcho', '조헌', FLOOR(RAND()*41)+20),
+('sjkim', '김정희', FLOOR(RAND()*41)+20),
+('yhpark', '박혁거세', FLOOR(RAND()*41)+20),
+('bcwang', '왕건', FLOOR(RAND()*41)+20),
+('sylee', '이성계', FLOOR(RAND()*41)+20),
+('jjkim', '김춘추', FLOOR(RAND()*41)+20),
+('jyheo', '허준', FLOOR(RAND()*41)+20),
+('sjlee', '이사부', FLOOR(RAND()*41)+20),
+('ykcho', '최치원', FLOOR(RAND()*41)+20),
+('ksahn', '안창호', FLOOR(RAND()*41)+20),
+('jjyoon', '윤봉길', FLOOR(RAND()*41)+20),
+('hjkim', '김좌진', FLOOR(RAND()*41)+20);
