@@ -139,3 +139,21 @@ INSERT INTO first (id, name, age) VALUES
 ('ksahn', '안창호', FLOOR(RAND()*41)+20),
 ('jjyoon', '윤봉길', FLOOR(RAND()*41)+20),
 ('hjkim', '김좌진', FLOOR(RAND()*41)+20);
+
+
+
+create table users (
+    idx integer auto_increment primary key,
+    id  char(30) unique,
+    pass    char(50) ,
+    name    char(30),
+    level   integer
+);
+insert into users (id, pass, name, level) values 
+    ('sino', '1111', '한문', '1');
+insert into users (id, pass, name, level) values 
+    ('math', '1111', '수학', '1');
+insert into users (id, pass, name, level) values 
+    ('trade', '1111', '무역', '1');
+insert into users (id, pass, name, level) values 
+    ('admin', '1111', '관리짱', '9');
