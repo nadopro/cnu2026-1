@@ -1,2 +1,11 @@
-init.php <br>
-홈페이지의 첫화면을 구성하는 페이지
+<?php
+    $sql ="select * from users order by name asc";
+    $result = mysqli_query($conn, $sql);
+    $data = mysqli_fetch_array($result);
+
+    while($data)
+    {
+        echo "id : $data[id] , name : $data[name] <br>";
+        $data = mysqli_fetch_array($result);
+    }
+?>
