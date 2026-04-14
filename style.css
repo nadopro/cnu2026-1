@@ -1,0 +1,19 @@
+a:link { text-decoration: none; color:#333333;}
+a:hover { text-decoration: none; color:#0000FF;}
+a:visited { text-decoration: none; color:#333333;}
+
+/* 공간보다 내용이 많으면 ...으로 말줄임 */
+.ellipsis {
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:0;
+}
+
+.colLine {
+    line-height:180%;
+    min-height:30px;
+    padding-top:6px;
+    border-bottom:1px dotted #333333;
+    padding-bottom:6px;
+}
