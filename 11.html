@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>인물 관계 네트워크 그래프</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+      background: #f5f6fa;
+      color: #222;
+    }
+
+    header {
+      padding: 20px 28px;
+      background: #1f2937;
+      color: white;
+    }
+
+    header h1 {
+      margin: 0 0 6px 0;
+      font-size: 24px;
+    }
+
+    header p {
+      margin: 0;
+      font-size: 14px;
+      color: #d1d5db;
+    }
+
+    #graph-wrap {
+      width: 100vw;
+      height: calc(100vh - 86px);
+      overflow: hidden;
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      cursor: grab;
+    }
+
+    .link {
+      stroke: #9ca3af;
+      stroke-width: 2px;
+    }
+
+    .link-label {
+      font-size: 13px;
+      fill: #374151;
+      font-weight: 600;
+      paint-order: stroke;
+      stroke: #ffffff;
+      stroke-width: 4px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .link.friend {
+      stroke: #ef4444;
+      stroke-dasharray: 7 5;
+      stroke-width: 2.5px;
+    }
+
+    .node text {
+      font-size: 18px;
+      fill: #111827;
+      font-weight: 800;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      cursor: grab;
+      paint-order: stroke;
+      stroke: #ffffff;
+      stroke-width: 6px;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.15));
+    }
+
+    .tooltip {
+      position: absolute;
+      padding: 8px 10px;
+      background: rgba(17, 24, 39, 0.92);
+      color: white;
+      border-radius: 8px;
+      font-size: 13px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>인물 관계 네트워크 그래프</h1>
+    <p>노드는 인물, 링크는 인물 간 관계를 의미합니다. 노드를 드래그할 수 있습니다.</p>
+  </header>
+
+  <div id="graph-wrap">
+    <svg id="network"></svg>
+  </div>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <script>
+    const graphData = {
+      nodes: [
+        { id: "홍길동", name: "홍길동" },
+        { id: "홍대감", name: "홍대감" },
+        { id: "이순신", name: "이순신" },
+        { id: "유성룡", name: "유성룡" },
+        { id: "이이", name: "이이" },
+        { id: "사임당", name: "사임당" }
+      ],
+      links: [
+        { source: "홍대감", target: "홍길동", type: "부자" },
+        { source: "홍길동", target: "이이", type: "친구" },
+        { source: "사임당", target: "이이", type: "모자" },
+        { source: "이순신", target: "유성룡", type: "친구" },
+        { source: "유성룡", target: "이이", type: "사제" }
+      ]
+    };
+
+    const svg = d3.select("#network");
+    const tooltip = d3.select("#tooltip");
+
+    const width = document.getElementById("graph-wrap").clientWidth;
+    const height = document.getElementById("graph-wrap").clientHeight;
+
+    svg.attr("viewBox", [0, 0, width, height]);
+
+    const container = svg.append("g");
+
+    svg.call(
+      d3.zoom()
+        .scaleExtent([0.4, 3])
+        .on("zoom", (event) => {
+          container.attr("transform", event.transform);
+        })
+    );
+
+    svg.append("defs")
+      .append("marker")
+      .attr("id", "arrow")
+      .attr("viewBox", "0 -5 10 10")
+      .attr("refX", 24)
+      .attr("refY", 0)
+      .attr("markerWidth", 7)
+      .attr("markerHeight", 7)
+      .attr("orient", "auto")
+      .append("path")
+      .attr("d", "M0,-5L10,0L0,5")
+      .attr("fill", "#9ca3af");
+
+    svg.append("defs")
+      .append("marker")
+      .attr("id", "arrow-friend")
+      .attr("viewBox", "0 -5 10 10")
+      .attr("refX", 24)
+      .attr("refY", 0)
+      .attr("markerWidth", 7)
+      .attr("markerHeight", 7)
+      .attr("orient", "auto")
+      .append("path")
+      .attr("d", "M0,-5L10,0L0,5")
+      .attr("fill", "#ef4444");
+
+    const link = container.append("g")
+      .selectAll("line")
+      .data(graphData.links)
+      .join("line")
+      .attr("class", d => d.type === "친구" ? "link friend" : "link")
+      .attr("marker-end", d => d.type === "친구" ? "url(#arrow-friend)" : "url(#arrow)");
+
+    const linkLabel = container.append("g")
+      .selectAll("text")
+      .data(graphData.links)
+      .join("text")
+      .attr("class", "link-label")
+      .text(d => d.type);
+
+    const node = container.append("g")
+      .selectAll("g")
+      .data(graphData.nodes)
+      .join("g")
+      .attr("class", "node")
+      .call(
+        d3.drag()
+          .on("start", dragStarted)
+          .on("drag", dragged)
+          .on("end", dragEnded)
+      );
+
+    node.append("text")
+      .text(d => d.name)
+      .on("mouseover", (event, d) => {
+        tooltip
+          .style("opacity", 1)
+          .html(`인물: ${d.name}`)
+          .style("left", `${event.pageX + 12}px`)
+          .style("top", `${event.pageY + 12}px`);
+      })
+      .on("mousemove", (event) => {
+        tooltip
+          .style("left", `${event.pageX + 12}px`)
+          .style("top", `${event.pageY + 12}px`);
+      })
+      .on("mouseout", () => {
+        tooltip.style("opacity", 0);
+      });
+
+    const simulation = d3.forceSimulation(graphData.nodes)
+      .force("link", d3.forceLink(graphData.links).id(d => d.id).distance(170))
+      .force("charge", d3.forceManyBody().strength(-550))
+      .force("center", d3.forceCenter(width / 2, height / 2))
+      .force("collision", d3.forceCollide().radius(48));
+
+    simulation.on("tick", () => {
+      link
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
+
+      linkLabel
+        .attr("x", d => (d.source.x + d.target.x) / 2)
+        .attr("y", d => (d.source.y + d.target.y) / 2 - 8);
+
+      node.attr("transform", d => `translate(${d.x},${d.y})`);
+    });
+
+    function dragStarted(event, d) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    function dragged(event, d) {
+      d.fx = event.x;
+      d.fy = event.y;
+    }
+
+    function dragEnded(event, d) {
+      if (!event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+  </script>
+</body>
+</html>
