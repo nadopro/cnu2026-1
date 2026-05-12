@@ -215,3 +215,19 @@ $conn = connectDB();
 그런데 노드를 위해 원을 그렸는데, 이름 자체를 노드로 사용하고 싶어. 즉 인물자리에 이름만 있게 바꾸고 싶어. 친구 관계인 경우에는 빨간색 점선으로 표시해 줘.
 
 11.html
+
+
+create table 테이블명 (
+    필드1   타입
+
+);
+
+create table student (
+    idx     integer auto_increment primary key,
+    name    char(20),
+    id      char(10),
+    age     integer,
+    birth   date,
+    memo    text,
+    time    datetime
+);
