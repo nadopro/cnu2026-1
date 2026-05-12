@@ -320,7 +320,28 @@ FROM (
 ) AS temp;
 
 
+검색(select)
+select 필드1, 필드2, ... FROM 테이블명 WHERE 조건
+select * from std;
+
+select id, name from std;
+
+select * from std order by name asc;  -- desc
+
+select * from std where idx > 10 order by id desc;
+select * from std where name like '김%';
+
+수정(갱신, update)
+update 테이블명 set 필드1='값1', 필드2='값2' 
+    WEHRE idx='누구'
+
+update std set name='이순신1' where idx='1';
 
 
+삭제: 
+
+DELETE FROM 테이블명 where 조건
+
+delete from std where idx='1';
 
 http://localhost/phpmyadmin
