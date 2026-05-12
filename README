@@ -345,3 +345,16 @@ DELETE FROM 테이블명 where 조건
 delete from std where idx='1';
 
 http://localhost/phpmyadmin
+
+list.php파일을 만들고싶어.
+index.php?cmd=list와 같이 접속하면
+cmd값을 보고 index.php에서 include "$cmd.php"처럼
+사용되고 있어.
+이미 index.php에서 DB접속후 결과를 $conn = connectDB();로
+접속정보까지 확인한 상태야.
+index.php에서는 HTML5와 Boostrap5로 설정이 다 된 상태야.
+list.php에서는 std 테이블에서 전체 목록을 이름의 오름차순으로 가져와서
+표 형태로 출력하고 싶은거야.
+mysqli_fetch_array()를 이용해서 데이터를 출력하는 코드만 
+있으면 돼.
+

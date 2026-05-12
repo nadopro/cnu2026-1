@@ -47,10 +47,10 @@
                 <!-- 메뉴2 -->
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                    메뉴2
+                    데이터베이스
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">메뉴 2-1</a></li>
+                    <li><a class="dropdown-item" href="index.php?cmd=list">학생 목록</a></li>
                     <li><a class="dropdown-item" href="#">메뉴 2-2</a></li>
                   </ul>
                 </li>
