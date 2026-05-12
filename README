@@ -232,4 +232,95 @@ create table student (
     time    datetime
 );
 
+삽입(insert)
+insert into 테이블명 (name, id, age) values ('값', '값', '값');
+insert into student (name, id, age, birth, memo, time) 
+        values ('홍길동', 'kdhong', '12', 
+        '2000-01-01', '메모1',  now() );
+insert into student (name, id, age, birth, memo, time) 
+        values ('홍대감', '202512345', '52', 
+        '1952-05-12', '메모2',  now() );
+insert into student (name, id, age, birth, memo, time) 
+        values ('이순신', '202612345', '34', 
+        '1986-05-12', '메모3',  now() );
+
+mysql table을 다음과 같이 만들고 싶어.
+table name : std 
+idx : 자동 증가, primary key
+name, id, birth, memo, time 정보가 필요해
+
+birth : 2000-01-01 형식
+id : 학생의 학번을 저장하는 용도, 예: 202412345 와 같은 형식
+id : 중복이 불가능
+time : 데이터가 등록되는 시간(datetime)
+memo : 1만자 이상의 설명이 들어갈 수 있음.
+
+
+CREATE TABLE std (
+    idx INT AUTO_INCREMENT PRIMARY KEY,
+    
+    name VARCHAR(100) NOT NULL,
+    
+    id CHAR(9) NOT NULL UNIQUE,
+    -- 예: 202412345
+    
+    birth DATE NOT NULL,
+    -- 형식: 2000-01-01
+    
+    memo LONGTEXT,
+    -- 1만자 이상 저장 가능
+    
+    time DATETIME DEFAULT CURRENT_TIMESTAMP
+    -- 데이터 등록 시간 자동 저장
+);
+
+
+이 테이블에 데이터 30개를 넣고 싶어.
+name : 조선시대 역사 인물중 무작위 결정
+id : 2020xxxxx - 2026xxxxx 사이의 무작위 값
+birth : 2000-01-01 ~ 2025-12-31 사이의 무작위 값
+memo : name, id, birth를 순서대로 입력
+time : 현재 시간
+
+이를 만족하는 질의(query, 쿼리)를 만들어줘.
+
+INSERT INTO std (name, id, birth, memo, time)
+SELECT name, id, birth, CONCAT(name, ', ', id, ', ', birth), NOW()
+FROM (
+    SELECT '이순신' AS name, '202012345' AS id, '2001-03-15' AS birth
+    UNION ALL SELECT '세종대왕', '202112346', '2002-07-21'
+    UNION ALL SELECT '정약용', '202212347', '2003-11-09'
+    UNION ALL SELECT '김홍도', '202312348', '2004-05-18'
+    UNION ALL SELECT '신사임당', '202412349', '2005-09-27'
+    UNION ALL SELECT '율곡 이이', '202512350', '2006-01-12'
+    UNION ALL SELECT '퇴계 이황', '202612351', '2007-04-03'
+    UNION ALL SELECT '허준', '202013452', '2008-08-14'
+    UNION ALL SELECT '장영실', '202114563', '2009-12-25'
+    UNION ALL SELECT '황희', '202215674', '2010-02-07'
+    UNION ALL SELECT '맹사성', '202316785', '2011-06-30'
+    UNION ALL SELECT '정몽주', '202417896', '2012-10-11'
+    UNION ALL SELECT '조광조', '202518907', '2013-03-22'
+    UNION ALL SELECT '권율', '202619018', '2014-07-05'
+    UNION ALL SELECT '곽재우', '202020129', '2015-11-16'
+    UNION ALL SELECT '유성룡', '202121230', '2016-01-29'
+    UNION ALL SELECT '송시열', '202222341', '2017-04-19'
+    UNION ALL SELECT '김만중', '202323452', '2018-08-08'
+    UNION ALL SELECT '허균', '202424563', '2019-12-01'
+    UNION ALL SELECT '황진이', '202525674', '2020-05-13'
+    UNION ALL SELECT '논개', '202626785', '2021-09-24'
+    UNION ALL SELECT '김시습', '202027896', '2022-02-15'
+    UNION ALL SELECT '서경덕', '202128907', '2023-06-06'
+    UNION ALL SELECT '남효온', '202229018', '2024-10-17'
+    UNION ALL SELECT '성삼문', '202330129', '2025-01-28'
+    UNION ALL SELECT '박팽년', '202431230', '2000-04-09'
+    UNION ALL SELECT '하위지', '202532341', '2001-08-20'
+    UNION ALL SELECT '이개', '202633452', '2002-12-31'
+    UNION ALL SELECT '유응부', '202034563', '2003-03-04'
+    UNION ALL SELECT '유성원', '202135674', '2004-07-15'
+) AS temp;
+
+
+
+
+
 http://localhost/phpmyadmin
