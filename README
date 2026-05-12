@@ -231,3 +231,5 @@ create table student (
     memo    text,
     time    datetime
 );
+
+http://localhost/phpmyadmin
