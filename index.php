@@ -51,6 +51,8 @@
                   </a>
                   <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="index.php?cmd=list">학생 목록</a></li>
+                    <li><a class="dropdown-item" href="index.php?cmd=dbtest">통합DB</a></li>
+                    
                     <li><a class="dropdown-item" href="#">메뉴 2-2</a></li>
                   </ul>
                 </li>
