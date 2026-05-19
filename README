@@ -404,3 +404,9 @@ CREATE TABLE fee (
     
     PRIMARY KEY (idx)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+
+mysqldump -u cnu cnu -p > 2026-05-19.db.sql
+
+
