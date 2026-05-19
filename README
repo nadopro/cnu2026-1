@@ -392,3 +392,15 @@ $text = "동해물과 백두산이 마르고 닳도록..";
 순서, 1음절, 빈도, 2음절, 빈도, 3음절, 빈도
 상위 30개만 하고 싶어.
 
+
+
+CREATE TABLE fee (
+    idx INT NOT NULL AUTO_INCREMENT,
+    base_year YEAR NOT NULL COMMENT '기준연도',
+    province_name VARCHAR(50) NOT NULL COMMENT '시도명',
+    university_name VARCHAR(100) NOT NULL COMMENT '대학교명',
+    establishment_type VARCHAR(20) NOT NULL COMMENT '설립형태구분명',
+    average_tuition DECIMAL(12,1) NOT NULL COMMENT '평균등록금액',
+    
+    PRIMARY KEY (idx)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
