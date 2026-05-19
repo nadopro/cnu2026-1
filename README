@@ -393,6 +393,8 @@ $text = "동해물과 백두산이 마르고 닳도록..";
 상위 30개만 하고 싶어.
 
 
+drop table fee;
+
 
 CREATE TABLE fee (
     idx INT NOT NULL AUTO_INCREMENT,
@@ -400,7 +402,7 @@ CREATE TABLE fee (
     province_name VARCHAR(50) NOT NULL COMMENT '시도명',
     university_name VARCHAR(100) NOT NULL COMMENT '대학교명',
     establishment_type VARCHAR(20) NOT NULL COMMENT '설립형태구분명',
-    average_tuition DECIMAL(12,1) NOT NULL COMMENT '평균등록금액',
+    average_tuition float default '0.0' COMMENT '평균등록금액',
     
     PRIMARY KEY (idx)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
