@@ -417,12 +417,12 @@ mysqldump -u cnu cnu -p > 2026-05-19.db.sql
 2. 테이블을 만들었는데 --> 변경
 
 create table mytest (
-    idx     int auto_increment primary key,
+    idx     integer auto_increment primary key,
     id      char(10) ,
     name    char(10)
 );
 
-insert int mytest (id, name) values ('2026001', '홍길동');
+insert into mytest (id, name) values ('2026001', '홍길동');
 
-
+drop table mytest;
 
