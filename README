@@ -426,3 +426,26 @@ insert into mytest (id, name) values ('2026001', '홍길동');
 
 drop table mytest;
 
+테이블 변경
+alter table mytable 동작(추가, 변경, 삭제)
+alter table mytest add xyz char(10) default '한문';
+
+xyz -> dept
+
+alter table mytest change xyz dept char(15);
+
+
+필드 삭제
+
+alter table mytest drop dept;
+
+
+
+create table present_table (
+    idx     integer auto_increment primary key,
+    -- 학과, 학년, 학번, 이름
+    1회차,
+    ...
+    15회차
+);
+
