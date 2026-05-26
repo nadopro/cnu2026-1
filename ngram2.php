@@ -71,7 +71,61 @@ $threeKeys = array_keys($threeGram);
 // 실제 출력 행 수는 사용자가 입력한 limit 기준
 $rowCount = $limit;
 
+function renderWordCloud($grams)
+{
+    if (empty($grams)) {
+        echo '<p class="text-muted">표시할 결과가 없습니다.</p>';
+        return;
+    }
+
+    $max = max($grams);
+    $min = min($grams);
+
+    foreach ($grams as $token => $frequency) {
+        if ($max == $min) {
+            $fontSize = 24;
+        } else {
+            // 빈도에 따라 14px ~ 48px 사이로 표시
+            $fontSize = 14 + (($frequency - $min) / ($max - $min)) * 34;
+        }
+
+        $fontSize = round($fontSize, 1);
+        $safeToken = htmlspecialchars($token, ENT_QUOTES, 'UTF-8');
+        $safeFrequency = htmlspecialchars((string)$frequency, ENT_QUOTES, 'UTF-8');
+
+        echo '<span class="ngram-word" style="font-size: ' . $fontSize . 'px;" title="' . $safeToken . ' : ' . $safeFrequency . '회">';
+        echo $safeToken . '<small>' . $safeFrequency . '</small>';
+        echo '</span>';
+    }
+}
+
 ?>
+
+<style>
+    .word-cloud-box {
+        min-height: 180px;
+        padding: 24px;
+        border: 1px solid #dee2e6;
+        border-radius: 12px;
+        background: #f8f9fa;
+        line-height: 2.2;
+        word-break: keep-all;
+    }
+
+    .ngram-word {
+        display: inline-block;
+        margin: 6px 10px;
+        font-weight: 700;
+        vertical-align: middle;
+    }
+
+    .ngram-word small {
+        margin-left: 4px;
+        font-size: 0.45em;
+        font-weight: 400;
+        color: #6c757d;
+    }
+</style>
 
 <h3 class="mb-3">음절 N-gram 분석</h3>
 
@@ -158,3 +212,26 @@ $rowCount = $limit;
 
     </tbody>
 </table>
+
+<h3 class="mt-5 mb-3">워드클라우드</h3>
+
+<div class="mb-4">
+    <h5>1음절 워드클라우드</h5>
+    <div class="word-cloud-box">
+        <?php renderWordCloud($oneGram); ?>
+    </div>
+</div>
+
+<div class="mb-4">
+    <h5>2음절 워드클라우드</h5>
+    <div class="word-cloud-box">
+        <?php renderWordCloud($twoGram); ?>
+    </div>
+</div>
+
+<div class="mb-4">
+    <h5>3음절 워드클라우드</h5>
+    <div class="word-cloud-box">
+        <?php renderWordCloud($threeGram); ?>
+    </div>
+</div>
