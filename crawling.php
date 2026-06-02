@@ -1,25 +1,14 @@
 <?php
 
-$title = '';
-$content = '';
-$result = '';
-$url = '';
+$rawResult = '';
+$outputText = '';
+$startUrl = '';
+$collectedCount = 0;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    $bookid = trim($_POST['bookid'] ?? '');
-    $volume = trim($_POST['volume'] ?? '');
-    $group  = trim($_POST['group'] ?? '');
-    $no     = trim($_POST['no'] ?? '');
-
-    $volume = str_pad($volume, 4, '0', STR_PAD_LEFT);
-    $group  = str_pad($group, 3, '0', STR_PAD_LEFT);
-    $no     = str_pad($no, 4, '0', STR_PAD_LEFT);
-
-    $dataId = "{$bookid}_{$volume}_{$group}_{$no}";
-    $url = "https://db.itkc.or.kr/dir/node?dataId={$dataId}";
-
+function fetchHtml($url)
+{
     $ch = curl_init();
+
     curl_setopt_array($ch, [
         CURLOPT_URL => $url,
         CURLOPT_RETURNTRANSFER => true,
@@ -32,67 +21,127 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $html = curl_exec($ch);
 
     if (curl_errno($ch)) {
-        $result = '크롤링 오류: ' . curl_error($ch);
-    } else {
-        $result = $html;
-
-        libxml_use_internal_errors(true);
-
-        $dom = new DOMDocument();
-        $dom->loadHTML('<?xml encoding="utf-8" ?>' . $html);
-
-        $xpath = new DOMXPath($dom);
-
-        // 제목 추출
-        $titleNode = $xpath->query(
-            "//div[contains(concat(' ', normalize-space(@class), ' '), ' text_body_tit ')]//h4"
-        );
-
-        if ($titleNode->length > 0) {
-            $title = trim($titleNode->item(0)->textContent);
-            $title = preg_replace('/\s+/', ' ', $title);
-        }
-
-        // 내용 추출
-        $bodyNode = $xpath->query(
-            "//div[contains(concat(' ', normalize-space(@class), ' '), ' text_body ') 
-              and contains(concat(' ', normalize-space(@class), ' '), ' ori ')]"
-        );
-
-        if ($bodyNode->length > 0) {
-
-            $bodyHtml = '';
-
-            foreach ($bodyNode->item(0)->childNodes as $child) {
-                $bodyHtml .= $dom->saveHTML($child);
-            }
-
-            // br 태그를 줄바꿈으로 변환
-            $bodyHtml = preg_replace('/<br[^>]*>/i', "\n", $bodyHtml);
-
-            // img 태그 제거
-            $bodyHtml = preg_replace('/<img[^>]*>/i', '', $bodyHtml);
-
-            // 나머지 HTML 태그 제거
-            $content = strip_tags($bodyHtml);
-
-            // HTML 엔티티 변환
-            $content = html_entity_decode($content, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-
-            // 줄 단위 공백 정리
-            $lines = explode("\n", $content);
-            $lines = array_map('trim', $lines);
-            $lines = array_filter($lines, function ($line) {
-                return $line !== '';
-            });
-
-            $content = implode("\n", $lines);
-        }
-
-        libxml_clear_errors();
+        $html = false;
     }
 
     curl_close($ch);
+
+    return $html;
+}
+
+function extractTitleAndContent($html)
+{
+    $title = '';
+    $content = '';
+
+    libxml_use_internal_errors(true);
+
+    $dom = new DOMDocument();
+    $dom->loadHTML('<?xml encoding="utf-8" ?>' . $html);
+
+    $xpath = new DOMXPath($dom);
+
+    // 제목 추출
+    $titleNode = $xpath->query(
+        "//div[contains(concat(' ', normalize-space(@class), ' '), ' text_body_tit ')]//h4"
+    );
+
+    if ($titleNode->length > 0) {
+        $title = trim($titleNode->item(0)->textContent);
+        $title = preg_replace('/\s+/', ' ', $title);
+    }
+
+    // 내용 추출
+    $bodyNode = $xpath->query(
+        "//div[contains(concat(' ', normalize-space(@class), ' '), ' text_body ') 
+          and contains(concat(' ', normalize-space(@class), ' '), ' ori ')]"
+    );
+
+    if ($bodyNode->length > 0) {
+        $bodyHtml = '';
+
+        foreach ($bodyNode->item(0)->childNodes as $child) {
+            $bodyHtml .= $dom->saveHTML($child);
+        }
+
+        $bodyHtml = preg_replace('/<br[^>]*>/i', "\n", $bodyHtml);
+        $bodyHtml = preg_replace('/<img[^>]*>/i', '', $bodyHtml);
+
+        $content = strip_tags($bodyHtml);
+        $content = html_entity_decode($content, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        $lines = explode("\n", $content);
+        $lines = array_map('trim', $lines);
+        $lines = array_filter($lines, function ($line) {
+            return $line !== '';
+        });
+
+        $content = implode("\n", $lines);
+    }
+
+    libxml_clear_errors();
+
+    return [
+        'title' => $title,
+        'content' => $content
+    ];
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $bookid = trim($_POST['bookid'] ?? '');
+    $volume = trim($_POST['volume'] ?? '');
+    $group  = trim($_POST['group'] ?? '');
+    $no     = trim($_POST['no'] ?? '');
+
+    $volumeNum = (int)$volume;
+    $groupNum  = (int)$group;
+    $noNum     = (int)$no;
+
+    $volumeText = str_pad($volumeNum, 4, '0', STR_PAD_LEFT);
+    $groupText  = str_pad($groupNum, 3, '0', STR_PAD_LEFT);
+
+    $maxLoop = 300;
+
+    for ($i = 0; $i < $maxLoop; $i++) {
+
+        $currentNo = $noNum + ($i * 10);
+        $noText = str_pad($currentNo, 4, '0', STR_PAD_LEFT);
+
+        $dataId = "{$bookid}_{$volumeText}_{$groupText}_{$noText}";
+        $url = "https://db.itkc.or.kr/dir/node?dataId={$dataId}";
+
+        if ($i === 0) {
+            $startUrl = $url;
+        }
+
+        $html = fetchHtml($url);
+
+        if ($html === false || trim($html) === '') {
+            break;
+        }
+
+        if ($i === 0) {
+            $rawResult = $html;
+        }
+
+        $extracted = extractTitleAndContent($html);
+
+        $title = $extracted['title'];
+        $content = $extracted['content'];
+
+        // 제목과 내용이 모두 없으면 결과 없음으로 판단하고 종료
+        if ($title === '' && $content === '') {
+            break;
+        }
+
+        $outputText .= "URL : {$url}\n";
+        $outputText .= "제목 : {$title}\n";
+        $outputText .= "내용 : \n{$content}\n\n";
+        $outputText .= "------------------------------------------------------------\n\n";
+
+        $collectedCount++;
+    }
 }
 ?>
 
@@ -100,7 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="card shadow-sm mb-3">
         <div class="card-header">
-            한국고전종합DB 크롤링
+            한국고전종합DB 반복 크롤링
         </div>
 
         <div class="card-body">
@@ -150,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div class="col-md-2 d-flex align-items-end">
                         <button type="submit" class="btn btn-primary w-100">
-                            크롤링 실행
+                            반복 크롤링
                         </button>
                     </div>
 
@@ -160,44 +209,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
-    <?php if ($url): ?>
+    <?php if ($startUrl): ?>
 
         <div class="alert alert-light border">
-            <strong>크롤링 주소</strong><br>
-            <?= htmlspecialchars($url, ENT_QUOTES, 'UTF-8') ?>
+            <strong>시작 URL</strong><br>
+            <?= htmlspecialchars($startUrl, ENT_QUOTES, 'UTF-8') ?>
+            <br>
+            <strong>수집 건수</strong> :
+            <?= number_format($collectedCount) ?>건
         </div>
 
         <div class="card shadow-sm mb-3">
             <div class="card-header">
-                크롤링 원본 전체
+                수집 결과
             </div>
 
             <div class="card-body">
-                <textarea class="form-control" rows="15"><?= htmlspecialchars($result, ENT_QUOTES, 'UTF-8') ?></textarea>
+                <textarea
+                    class="form-control w-100"
+                    style="width:100%; min-height:700px; white-space:pre-wrap;"
+                    rows="30"><?= htmlspecialchars($outputText, ENT_QUOTES, 'UTF-8') ?></textarea>
             </div>
         </div>
 
         <div class="card shadow-sm mb-3">
             <div class="card-header">
-                추출 결과
+                첫 번째 크롤링 원본 HTML
             </div>
 
             <div class="card-body">
-
-                <div class="mb-3">
-                    <label class="form-label fw-bold">제목</label>
-                    <input
-                        type="text"
-                        class="form-control"
-                        value="<?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8') ?>"
-                        readonly>
-                </div>
-
-                <div>
-                    <label class="form-label fw-bold">내용</label>
-                    <textarea class="form-control" rows="18" readonly><?= htmlspecialchars($content, ENT_QUOTES, 'UTF-8') ?></textarea>
-                </div>
-
+                <textarea
+                    class="form-control w-100"
+                    style="width:100%; min-height:400px;"
+                    rows="20"><?= htmlspecialchars($rawResult, ENT_QUOTES, 'UTF-8') ?></textarea>
             </div>
         </div>
 
