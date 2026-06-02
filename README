@@ -476,3 +476,257 @@ index.php에서 include "crawling.php";와 같이 동작하는 코드야.
 너는 crawling.php만 만들어주면 돼.
 
 
+
+=====================================
+이렇게 해서 가져온 코드 다음과 같아.
+
+그런데 나는 다음과 같이 화면에 출력하고 싶어.
+
+제목 :
+내용 : 
+
+이때 제목은 아래 태그 중에서 <h4></h4>사이의 텍스트중 태그를 제외한 나머지야
+	<div class="text_body_tit mt10 ori">
+		<h4>
+			原水旱
+ a003_101a
+			
+		</h4>
+	</div>
+
+내용은 아래 태그 중에서 태그를 제외한 나머지를 의미하는 거야.
+<div class="text_body ori">
+		<div class="xsl_para xsl_indent_0" style="text-align:left;">水旱果天數乎。果人事乎。堯湯未免。天數也。休咎有<br data-xsl-tag="line">徵。人事也。古之人修人事以應天數。故有九七年之<br data-xsl-tag="line">厄而民不病。後之人委天數而廢人事。故一二年之<br data-xsl-tag="line">灾。而民已轉于溝壑矣。國家非惟省歲月日。且有儲<br data-xsl-tag="line">備。人事可謂修矣。自去年之水旱而民甚病。多方救<br data-xsl-tag="line">療之不得其要。何哉。甞聞之父老。曰移民移粟。食飢<br data-xsl-tag="line">飮渴。僅足以紓目前之急。若欲因其已然之迹而防<br data-xsl-tag="line">
+<img title="a003_101b" data-page-number="ITKC_MO_0014A_A003_101B" class="xsl_page_icon" src="../resources/images/page_tag.gif">其未然之患。盍亦究其原。夫民之寄命者有司。凡有<br data-xsl-tag="line">利害。必赴而訴之。若子於父母。然父母之於子。祛其<br data-xsl-tag="line">害而已。豈計其利己乎。今之有司則不然。設二人爭<br data-xsl-tag="line">訟。甲若有錢。乙便無理。其民安得不死寃。其氣安得<br data-xsl-tag="line">不傷和乎。此所由召水旱也。監有司曰監司。凡有貪<br data-xsl-tag="line">廉。卽按而誅賞之。監監司曰監察。凡有賢否。卽察而<br data-xsl-tag="line">黜陟之。今皆不然。間有志古者。反不見容於時。盖今<br data-xsl-tag="line">日之監司。卽前日監察。今日之監察。卽前日有司。相<br data-xsl-tag="line">扳援相蔽覆。故如此。苟使今之民。一見古之有司。今<br data-xsl-tag="line">之有司。一見古之監司。今之監司。一見古之監察則<br data-xsl-tag="line">
+<img title="a003_101c" data-page-number="ITKC_MO_0014A_A003_101C" class="xsl_page_icon" src="../resources/images/page_tag.gif">吾赤子庶免溝壑矣。然則天數也人事也。其要去貪<br data-xsl-tag="line">而已。如欲去貪則有成憲具在。擧而行之。在乎宰天<br data-xsl-tag="line">下者耳。作原水旱。</div>
+
+		
+	</div>
+
+이렇게 화면 하단에 제목과, 내용만 추가적으로 출력되도록 앞의 crawling.php 파일을 고쳐줘.
+index.php에서 이미 bootstrap5를 사용하기 때문에, 버튼이나
+입력창도 보기 좋게 만들어 줘.    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+<!-- 새창열기,인쇄는 막음 -->
+<div class="page_option">
+	<div class="page_option_sub">
+		<div class="option_btn_img fl">
+			
+
+
+	<a class="m1 dis" title="검색결과 중 맨앞으로">검색결과 중 맨앞으로</a>
+	<a class="m2 dis" title="검색결과 중 이전으로">검색결과 중 이전으로</a>
+	<a class="m3 dis" title="검색결과 중 다음으로">검색결과 중 다음으로</a>
+	<a class="m4 dis" title="검색결과 중 맨끝으로">검색결과 중 맨끝으로</a>
+	
+	
+	
+		<a class="m5 dis" title="검색결과로 빨리가기">검색결과로 빨리가기</a>
+	
+	
+	
+	<a class="m6" onclick="popSearchHistory()" title="검색발자취">검색발자취</a>
+	<a class="m7 dis" title="검색결과 목록으로">검색결과 목록으로</a>
+
+
+
+	
+	
+		<a class="m8 nodeView_print" title="출력" data-nodeview-type="view">출력</a>
+	
+	
+	
+
+
+
+		</div>
+		
+		<div class="option_btn_txt fl">
+			
+
+	
+	
+		<a onclick="popWin('/dir/pop/bexam?dataId=ITKC_MO_0014A','_blank', 900, 900)">범례</a> | 
+					
+	<a onclick="popWin('/dir/pop/mokcha?dataId=ITKC_MO_0014A','_blank', 900, 900)">목차</a>
+	
+	
+		l <a href="/dir/item?grpId=hj#/dir/node?grpId=hj&itemId=MI&dataId=ITKC_MI_0014A" target="_blank">해제</a>
+	
+	
+		
+	
+		</div>
+		
+		<div class="option_btn_img fr">
+			<a class="nodeView_openwin">새창열기</a>
+			<a onclick="fontSize('+')">가+</a>
+			<a onclick="fontSize('')">가</a>
+			<a onclick="fontSize('-')">가-</a>
+			
+
+	<a class="vm1" onclick="goPrevNextView('prev')" title="본문 중 이전으로">본문 중 이전으로</a>
+	<a class="vm2" onclick="goPrevNextView('next')" title="본문 중 다음으로">본문 중 다음으로</a>
+	
+	
+	
+		
+		
+		
+			<a class="vm3" href="#/dir/node?dataId=ITKC_MO_0014A_0020_010" title="상위노드로">상위노드로</a>
+		
+		
+	
+	
+	
+
+			
+
+		<a class="pop_error_btn" onclick="popWin('/board/errWrite?openType=pop','_blank', 900, 900)" data-err-itemName='한국문집총간' data-err-itemDCI='ITKC_MO_0014A_0020_010_0010_2003_A003_XML'>오류신고</a>
+		<a class="scroll_top_btn">▲TOP</a>
+
+
+		</div>
+	
+		<div class="option_btn_txt fr mr10">
+			
+
+	
+	
+	
+	
+	
+	
+		<a class="check_toggle " onclick="changeLocationHash('viewSync','TR')">번역문</a>
+		
+	
+	
+	
+		l <a onclick="goImageViewer('ITKC_MO_0014A_0020_010_0010')">원문이미지</a>
+		
+	
+	
+	
+
+	
+
+	
+
+		</div>
+	</div>
+</div>
+
+<div class="path">
+	
+
+	<a href="/"><img src="/resources/images/ico_home.png" alt="" /></a>
+	&gt; <a href="#/dir/list?itemId=MO&gubun=book">한국문집총간</a>
+	
+	
+	
+		
+		&gt; <a href="#/dir/node?dataId=ITKC_MO_0014A">가정집</a>
+		
+	
+		
+		&gt; <a href="#/dir/node?dataId=ITKC_MO_0014A_0020">稼亭先生文集卷之一</a>
+		
+	
+		
+		&gt; <a href="#/dir/node?dataId=ITKC_MO_0014A_0020_010">雜著</a>
+		
+	
+	
+	&gt;
+	
+	
+		최종정보
+	
+	
+	
+	
+
+	
+
+</div>
+
+
+<section class="content_text_body content_scroll scroll_area para_block" data-viewnode-id="ITKC_MO_0014A_0020_010_0010">
+	<div class="list_tit2 list_tit3 MO">
+		<h3>
+			
+			稼亭先生文集卷之一
+
+			/ 雜著
+
+		</h3>
+		
+	</div>
+
+	<div class="text_body_tit mt10 ori">
+		<h4>
+			原水旱
+ a003_101a
+			
+		</h4>
+	</div>
+	
+	
+	<div class="dci-pane">
+		
+		
+			[DCI]ITKC_MO_0014A_0020_010_0010_2003_A003_XML
+			<a class="small_btn dci" data-dci-copy="ITKC_MO_0014A_0020_010_0010_2003_A003_XML">DCI복사</a>
+			<a class="small_btn dci dci-url-type" data-url-copy="ITKC_MO_0014A_0020_010_0010_2003_A003_XML">URL복사</a>
+		
+		
+		
+	</div>
+	
+
+	<div class="text_body ori">
+		<div class="xsl_para xsl_indent_0" style="text-align:left;">水旱果天數乎。果人事乎。堯湯未免。天數也。休咎有<br data-xsl-tag="line">徵。人事也。古之人修人事以應天數。故有九七年之<br data-xsl-tag="line">厄而民不病。後之人委天數而廢人事。故一二年之<br data-xsl-tag="line">灾。而民已轉于溝壑矣。國家非惟省歲月日。且有儲<br data-xsl-tag="line">備。人事可謂修矣。自去年之水旱而民甚病。多方救<br data-xsl-tag="line">療之不得其要。何哉。甞聞之父老。曰移民移粟。食飢<br data-xsl-tag="line">飮渴。僅足以紓目前之急。若欲因其已然之迹而防<br data-xsl-tag="line">
+<img title="a003_101b" data-page-number="ITKC_MO_0014A_A003_101B" class="xsl_page_icon" src="../resources/images/page_tag.gif">其未然之患。盍亦究其原。夫民之寄命者有司。凡有<br data-xsl-tag="line">利害。必赴而訴之。若子於父母。然父母之於子。祛其<br data-xsl-tag="line">害而已。豈計其利己乎。今之有司則不然。設二人爭<br data-xsl-tag="line">訟。甲若有錢。乙便無理。其民安得不死寃。其氣安得<br data-xsl-tag="line">不傷和乎。此所由召水旱也。監有司曰監司。凡有貪<br data-xsl-tag="line">廉。卽按而誅賞之。監監司曰監察。凡有賢否。卽察而<br data-xsl-tag="line">黜陟之。今皆不然。間有志古者。反不見容於時。盖今<br data-xsl-tag="line">日之監司。卽前日監察。今日之監察。卽前日有司。相<br data-xsl-tag="line">扳援相蔽覆。故如此。苟使今之民。一見古之有司。今<br data-xsl-tag="line">之有司。一見古之監司。今之監司。一見古之監察則<br data-xsl-tag="line">
+<img title="a003_101c" data-page-number="ITKC_MO_0014A_A003_101C" class="xsl_page_icon" src="../resources/images/page_tag.gif">吾赤子庶免溝壑矣。然則天數也人事也。其要去貪<br data-xsl-tag="line">而已。如欲去貪則有成憲具在。擧而行之。在乎宰天<br data-xsl-tag="line">下者耳。作原水旱。</div>
+
+		
+	</div>
+	
+	
+		
+	
+		<div class="text_copyright">ⓒ 한국고전번역원 | 영인표점 한국문집총간 | 1990</div>
+    
+	
+</section>
+
+
+
+<script type="text/javascript">
+	ga_send_event('아이템별 이용현황', '한국문집총간', '가정집(稼亭集)', 1);
+</script>
