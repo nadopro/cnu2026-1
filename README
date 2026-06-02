@@ -451,3 +451,28 @@ create table present_table (
 
 
 https://db.itkc.or.kr/dir/node?dataId=ITKC_MO_0014A_0110_020_0010
+
+
+웹 크롤링을 하고 싶어.
+https://db.itkc.or.kr/dir/node?dataId=ITKC_MO_1116A_0010_010_0010
+
+이런형태의 데이터를 가져오고 싶은데, 입력창을 다음과 만들고 싶어.
+bookid : <input type='text' placeholder='ITKC_MO_1116A'>
+volume : <input type='text' placeholder='10'>
+group : <input type='text' placeholoder='20'>
+no : <input type='text' placeholder='30'>
+예를 들어 사용자가 입력한 값이 순서대로
+ITKC_MO_1116A, 10, 20, 30 이라고 한다면,
+ITKC_MO_1116A_0010_020_0030 과 같이 dataId를 만들고 싶어.
+즉 volume : 4자리수, group : 3자리수, no : 4자리 수로 위와 같이 변환해야 해.
+
+최종적으로 크롤링할 주소는 다음과 같아 
+https://db.itkc.or.kr/dir/node?dataId=ITKC_MO_1116A_0010_020_0030
+
+크롤링한 결과를 화면의 하단에 textarea에 넣어줘.
+
+index.php?cmd=crawling으로 접속하는데,
+index.php에서 include "crawling.php";와 같이 동작하는 코드야.
+너는 crawling.php만 만들어주면 돼.
+
+
